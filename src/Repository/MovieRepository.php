@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Movie;
+use DateTime;
+use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +49,21 @@ class MovieRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function saveOrUpdateMovie ($request, $movie) 
+    {
+        $data = json_decode($request->getContent());
+        $movie->setName($data->name);
+        $movie->setGender($data->gender);
+        $movie->setWeek($data->week);
+        $movie->setDescription($data->description);
+        $movie->setCreatedAt(new DateTime('now', new DateTimeZone('America/Sao_Paulo')));
+
+        if(!$movie->getId() == null) {
+            $movie->setUpdatedAt(new DateTime('now', new DateTimeZone('America/Sao_Paulo')));
+        }
+
+        return $movie;
+    
+    }
 }
